@@ -36,6 +36,7 @@ class Record(Base):
 
 
 **Example script**
+
 ```python
 import csv
 import datetime
@@ -62,25 +63,25 @@ with open('filename.csv', 'r+') as f:
 ```
 
 Above, this separate load.py file allows us to insert data into the database
-without ever running the app
+without ever running the app  
 
 
-**Declarative Base and MetaData**
+**Declarative Base and MetaData**  
 The `declarative_base()` base class contains a MetaData object where newly
 defined `Table` objects are collected. This is accessed when
 `models.Base.metadata.create_all()` is called.
 
 
-**Handling Threading issue: Scopped session and Session local**
-With `scoped_session` function SQLAlchemy can handle worker threading issues.
+**Handling Threading issue: Scopped session and Session local**  
+With `scoped_session` function SQLAlchemy can handle worker threading issues.  
 
 The sessionmaker is a factory for initializing new Session objects by
 requesting a connection from the engine's connection pool and attaching a
-connection to the new Session object.
+connection to the new Session object.  
 
 Initializing a new session object is also referred to as "checking out" a
 connection. So when you begin a new session, you are starting a new process
-within the database too.
+within the database too.  
 
 ```python
 from flask import Flask, _app_ctx_stack, jsonify, url_for
@@ -100,12 +101,12 @@ app.session = scoped_session(
 
 
 Additionally, scoped sessions give us access to a query_property. So if you
-style used by flask_sqlalchemy you can use this with SQLAlchemy
+style used by flask_sqlalchemy you can use this with SQLAlchemy  
 
 ```python
 Base = declarative_base()
 Base.query = db_session.query_property()
-```
+```  
 
 Check this project for reference
 https://github.com/edkrueger/sars-flask/blob/master/app/models.py
