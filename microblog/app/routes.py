@@ -121,7 +121,7 @@ def follow(username):
     if form.validate_on_submit():
         user = User.query.filter_by(username=username).first()
         if user is None:
-            flash(f'User {username} not found')
+            flash(f"User {username} not found")
             return redirect(url_for('index'))
         if user == current_user:
             flash('You cannot follow yourself')
@@ -165,6 +165,16 @@ def explore():
     prev_url = url_for('explore', page=posts.prev_num) \
             if posts.has_prev else None
 
-    return render_template('index.html', title='Explore', posts=posts.items,
-                          next_url=next_url, prev_url=prev_url)
+    return render_template('index.html', title='Explore', posts=posts.items)
+
+
+@app.route('/export_posts')
+@login_required
+def export_posts():
+    if current_user.get_task_in_progress('export_posts'):
+        flash(_('An export task is currently in progress'))
+    else:
+        current_user.launch_task('export_posts', _('Exporting posts...'))
+        db.session.commit()
+    return redirect(url_for('main.user', username=current_user.username))
 

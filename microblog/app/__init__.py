@@ -2,6 +2,8 @@ import os
 import logging
 from logging.handlers import SMTPHandler, RotatingFileHandler
 from flask import Flask
+from redis import Redis
+import rq
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -43,6 +45,11 @@ if not app.debug:
     app.logger.setLevel(logging.INFO)
     app.logger.info("Microblog startup")
 
+app.redis = Redis.from_url(app.config['REDIS_URL'])
+app.task_queue = rq.Queue('microblog-tasks', connection=app.redis)
+
+from app.api import bp as api_bp
+app.register_blueprint(api_bp, url_prefix='/api')
 
 from app import routes, models, errors
 
